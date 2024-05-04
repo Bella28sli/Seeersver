@@ -21,11 +21,11 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
-                <Button Content="ЛОГИ" Command="{Binding CheckLogsCommand}"/>
+                <Button x:Name="LogsButton" Content="ЛОГИ" Command="{Binding CheckLogsCommand}"/>
             </Grid>
 
             <Grid Grid.Column="2">
-                <Button Content="Выйти" Command="{Binding SendCommand}" FontFamily="Century Gothic" FontSize="20" Cursor="Hand"/>
+                <Button Content="Выйти" Command="{Binding ExitCommand}" FontFamily="Century Gothic" FontSize="20" Cursor="Hand"/>
             </Grid>
         </Grid>
         <Grid Grid.Row="1">

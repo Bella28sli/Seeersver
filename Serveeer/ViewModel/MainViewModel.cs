@@ -18,8 +18,13 @@ namespace Serveeer.ViewModel
         public BindableCommand CreateChatCommand { get; set; }
         public BindableCommand ConnectionCommand { get; set; }
         public BindableCommand SendCommand { get; set; }
+        public BindableCommand ExitCommand { get; set; }
+        public BindableCommand CheckLogsCommand { get; set; }
+
 
         public MainWindow StartWindow { get; set; }
+        ChatWindow1xaml currentWin;
+
         public Window Window { get; set; }
         public TcpClient tcpClient;
         public TcpServer tcpServer;
@@ -28,6 +33,10 @@ namespace Serveeer.ViewModel
             CreateChatCommand = new BindableCommand(_ => CreateChat());
             ConnectionCommand = new BindableCommand(_ => Connection());
             SendCommand = new BindableCommand(_ => SendText());
+            ExitCommand = new BindableCommand(_ => ExitText());
+
+            CheckLogsCommand = new BindableCommand(_ => CheckLogs());
+
             this.Window = Window;
 
         }
@@ -48,10 +57,10 @@ namespace Serveeer.ViewModel
             }
             else if (name != null)
             {
-                ChatWindow1xaml windowStart = new ChatWindow1xaml(true, this);
+                currentWin = new ChatWindow1xaml(true, this);
                 MessageTextProperty = name;
                 tcpClient = new TcpClient(this, MessageTextProperty);
-                windowStart.Show();
+                currentWin.Show();
                 Window.Close();
 
             }
@@ -67,9 +76,10 @@ namespace Serveeer.ViewModel
             else if (ip != null || name != null || ip != null && name != null)
             {
                 MessageTextProperty = name;
-                ChatWindow1xaml windowStart = new ChatWindow1xaml(false, this);
+                currentWin = new ChatWindow1xaml(false, this);
                 tcpClient = new TcpClient(this, MessageTextProperty);
-                windowStart.Show();
+
+                currentWin.Show();
                 Window.Close();
                 MessageTextProperty = "";
 
@@ -78,8 +88,23 @@ namespace Serveeer.ViewModel
         }
         private async Task SendText()
         {
+            if(MessageTextProperty == "/disconnect")
+            {
+                tcpClient.SendMessage("/disconnect");
+                MainWindow newMain = new MainWindow();
+                newMain.Show();
+                currentWin.Close();
+                return;
+            }
             tcpClient.SendMessage(MessageTextProperty);
         }
+        private async Task ExitText()
+        {
+            MessageTextProperty = "/disconnect";
+            SendText();
+
+        }
+
 
         private ObservableCollection<string> messageList = new ObservableCollection<string>();
         public ObservableCollection<string> MessageList
@@ -133,6 +158,12 @@ namespace Serveeer.ViewModel
                 messageTextProperty = value;
                 OnPropertyChanged(nameof(MessageTextProperty));
             }
+        }
+
+
+        private void CheckLogs()
+        {
+
         }
     }
 }

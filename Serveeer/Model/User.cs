@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Serveeer.Model
 {
-    internal class User
+    public class User
     {
         public string name {  get; set; }
         public Socket socket { get; set; }

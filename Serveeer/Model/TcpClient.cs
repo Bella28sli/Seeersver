@@ -1,6 +1,7 @@
 ﻿using Serveeer.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -21,6 +22,7 @@ namespace Serveeer.Model
             server.Connect("127.0.0.1", 8888);
             isFUCKINGSHIT = new CancellationTokenSource();
             SendMessage(name);
+            
             ReceiveMessage(isFUCKINGSHIT.Token);
 
         }
@@ -33,14 +35,30 @@ namespace Serveeer.Model
                 await server.ReceiveAsync(bytes, SocketFlags.None);
                 string text = Encoding.Unicode.GetString(bytes);
 
-                viewModel.MessageList.Add(text);
+                if (text.StartsWith("/log"))
+                {
+                    viewModel.UserList.Clear();
+                    viewModel.UserList = new ObservableCollection<string>(text.Split('\n'));
+                    viewModel.UserList.RemoveAt(0);
+                }
+                else if (text == "/disconnect")
+                {
+                    isFUCKINGSHIT.Cancel();
+                }
+                else
+                {
+                    viewModel.MessageList.Add(text);
+                }
 
             }
         }
         public async Task SendMessage(string text)
         {
-            byte[] bytes = Encoding.Unicode.GetBytes(text);
-            await server.SendAsync(bytes, SocketFlags.None);
+            if (text != "/disconnect")
+            {
+                byte[] bytes = Encoding.Unicode.GetBytes(text);
+                await server.SendAsync(bytes, SocketFlags.None);
+            }         
         }
     }
 }

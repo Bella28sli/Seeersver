@@ -1,11 +1,14 @@
 ﻿using Serveeer.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Serveeer.Model
 {
@@ -16,7 +19,8 @@ namespace Serveeer.Model
         private ServerViewModel viewModel;
         private MainViewModel mainView;
 
-        private List<User> users = new List<User>();
+        public List<User> users = new List<User>();
+        public ObservableCollection<string> backUp = new ObservableCollection<string>();
 
         public TcpServer(ServerViewModel viewModel, MainViewModel mainView)
         {
@@ -36,15 +40,15 @@ namespace Serveeer.Model
                 var client = await socket.AcceptAsync();
                 clients.Add(client);
 
-                ReceiveMessage(client);
+                ReceiveMessage(client, new CancellationToken());
             }
         }
-        private async Task ReceiveMessage(Socket client)
+        private async Task ReceiveMessage(Socket client, CancellationToken shitfuck)
         {
             bool isNewUser = true;
             string receivedMessage = "";
 
-            while (true)
+            while (!shitfuck.IsCancellationRequested)
             {
                 byte[] bytes = new byte[1024];
                 int bytesRead = await client.ReceiveAsync(bytes, SocketFlags.None);
@@ -58,31 +62,62 @@ namespace Serveeer.Model
                     newUser.socket = client;
                     newUser.name = receivedMessage;
                     newUser.logTime = DateTime.Now;
-                    users.Add(newUser);
+                    newUser.tokenSource = new CancellationTokenSource();
+                    shitfuck = newUser.tokenSource.Token;
 
-                    viewModel.UserList.Add($"[{newUser.name}]");
-                    mainView.UserList.Add($"[{newUser.name}]");
+                    users.Add(newUser);
+                    viewModel.UserList.Add(receivedMessage);
+                    backUp.Add($"{newUser.name} - подключился\n {DateTime.Now}");
+                    string names = "/log\n" + string.Join("\n", viewModel.UserList);
+                    foreach (User user in users)
+                    {
+                        SendMessage(user.socket, names);
+                    }
+
                     isNewUser = false;
                 }
                 else
                 {
-
                     string messageText = receivedMessage;
-                    string messageSender = users.FirstOrDefault(u => u.socket == client)?.name;
-                    string messageSendDate = DateTime.Now.ToString();
-                    string fulltext = $"[ {messageSendDate} ] {messageSender}: {messageText}";
-
-
-                    foreach (User user in users)
+                    if (messageText.StartsWith("/log"))
                     {
-                        if (user.socket != client)
+                        viewModel.UserList.Clear();
+                        viewModel.UserList = new ObservableCollection<string>(messageText.Split('\n'));
+                        viewModel.UserList.RemoveAt(0);
+
+                    }
+                    else if(messageText == "/diconnect")
+                    {
+                        User userToRemove = users.FirstOrDefault(u => u.socket == client);
+
+                        viewModel.UserList.Remove(userToRemove.name); //обновление пользователей
+                        users.Remove(userToRemove);
+                        userToRemove.tokenSource.Cancel();
+
+                        string names = "/log\n" + string.Join("\n", viewModel.UserList);
+                        foreach (User user in users)
                         {
-                            SendMessage(user.socket, fulltext);
+                            SendMessage(user.socket, names);
                         }
                     }
-                    viewModel.MessageList.Add(fulltext);
-                    SendMessage(client, fulltext);
-                    fulltext = "";
+                    else
+                    {
+                        string messageSender = users.FirstOrDefault(u => u.socket == client)?.name;
+                        string messageSendDate = DateTime.Now.ToString();
+                        string fulltext = $"[ {messageSendDate} ] {messageSender}: {messageText}";
+
+
+                        foreach (User user in users)
+                        {
+                            if (user.socket != client)
+                            {
+                                SendMessage(user.socket, fulltext);
+                            }
+                        }
+                        viewModel.MessageList.Add(fulltext);
+                        SendMessage(client, fulltext);
+                        fulltext = "";
+                    }
 
                 }
                 receivedMessage = ""; // Сбрасываем сообщение после обработки
@@ -90,8 +125,11 @@ namespace Serveeer.Model
         }
         public async Task SendMessage(Socket client, string text)
         {
-            byte[] bytes = Encoding.Unicode.GetBytes(text);
-            await client.SendAsync(bytes, SocketFlags.None);
+            if (text != "/disconnect")
+            {
+                byte[] bytes = Encoding.Unicode.GetBytes(text);
+                await client.SendAsync(bytes, SocketFlags.None);
+            }
         }
     }
 }

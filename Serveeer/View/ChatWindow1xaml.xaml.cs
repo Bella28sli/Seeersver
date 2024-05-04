@@ -26,10 +26,12 @@ namespace Serveeer.View
             if (isServer)
             {
                 ServerViewModel serverViewModel = new ServerViewModel(this, mainViewModel);
+
                 DataContext = serverViewModel;
             }
             else
             {
+                LogsButton.IsEnabled = false;
                 DataContext = mainViewModel;
             }
         }
