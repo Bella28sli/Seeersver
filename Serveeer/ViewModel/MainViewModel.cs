@@ -10,6 +10,7 @@ using Serveeer.View;
 using System.Net.Sockets;
 using Serveeer.Model;
 using TcpClient = Serveeer.Model.TcpClient;
+using System.ComponentModel;
 
 namespace Serveeer.ViewModel
 {
@@ -104,7 +105,10 @@ namespace Serveeer.ViewModel
             SendText();
 
         }
-
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            ExitText();
+        }
 
         private ObservableCollection<string> messageList = new ObservableCollection<string>();
         public ObservableCollection<string> MessageList

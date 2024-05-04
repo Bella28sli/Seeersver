@@ -23,16 +23,20 @@ namespace Serveeer.View
         public ChatWindow1xaml(bool isServer, MainViewModel mainViewModel)
         {
             InitializeComponent();
+
             if (isServer)
             {
                 ServerViewModel serverViewModel = new ServerViewModel(this, mainViewModel);
 
                 DataContext = serverViewModel;
+                Closing += serverViewModel.OnWindowClosing;
             }
             else
             {
                 LogsButton.IsEnabled = false;
                 DataContext = mainViewModel;
+                Closing += mainViewModel.OnWindowClosing;
+
             }
         }
 

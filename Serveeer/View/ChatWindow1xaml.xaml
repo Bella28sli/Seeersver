@@ -30,8 +30,8 @@
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
@@ -40,14 +40,25 @@
                     <RowDefinition Height="9*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <TextBlock Text="Пользователи:"  FontSize="18" materialDesign:HintAssist.HelperText="" Background="#FF010219" Foreground="#FFF7DDF4" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" FontFamily="Century Gothic" />
+                    <TextBlock Text="Пользователи:"  FontSize="18" materialDesign:HintAssist.HelperText="" Background="#FF010219" Foreground="#FFF7DDF4" VerticalAlignment="Center" HorizontalAlignment="Left" Cursor="Hand" FontFamily="Century Gothic" Padding="15,0,0,0" />
                 </Grid>
                 <Grid Grid.Row="1">
-                    <ListBox ItemsSource="{Binding UserList}" Foreground="#E5F3C7F7" FontFamily="Century Gothic" FontSize="18" HorizontalContentAlignment="Center"/>
+                    <ListBox ItemsSource="{Binding UserList}" Foreground="#E5F3C7F7" FontFamily="Century Gothic" FontSize="16" HorizontalContentAlignment="Left" Padding="25,0,0,0" Cursor="Hand"/>
                 </Grid>
             </Grid>
             <Grid Grid.Column="1">
-                <ListBox ItemsSource="{Binding MessageList}" Foreground="#E5F7BAF7" FontFamily="Century Gothic" FontSize="20" Padding="15,0,0,0" />
+                <ListBox ItemsSource="{Binding MessageList}" Foreground="#E5F7BAF7" FontFamily="Century Gothic" FontSize="20" Padding="15,0,0,0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    Text="{Binding}"
+                                    TextWrapping="Wrap"
+                                    />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </Grid>
         </Grid>
         <Grid Grid.Row="2" >

@@ -76,6 +76,23 @@ namespace Serveeer.Model
 
                     isNewUser = false;
                 }
+                else if (text == "/disconnect")
+                {
+                    User userToRemove = users.FirstOrDefault(u => u.socket == client);
+                    backUp.Add($"{userToRemove.name} - отключился\n {DateTime.Now}");
+
+                    viewModel.UserList.Remove(userToRemove.name); //обновление пользователей
+                    users.Remove(userToRemove);
+                    SendMessage(userToRemove.socket, "/disconnect");
+
+                    userToRemove.tokenSource.Cancel();
+
+                    string names = "/log\n" + string.Join("\n", viewModel.UserList);
+                    foreach (User user in users)
+                    {
+                        SendMessage(user.socket, names);
+                    }
+                }
                 else
                 {
                     string messageText = receivedMessage;
@@ -85,20 +102,6 @@ namespace Serveeer.Model
                         viewModel.UserList = new ObservableCollection<string>(messageText.Split('\n'));
                         viewModel.UserList.RemoveAt(0);
 
-                    }
-                    else if(messageText == "/diconnect")
-                    {
-                        User userToRemove = users.FirstOrDefault(u => u.socket == client);
-
-                        viewModel.UserList.Remove(userToRemove.name); //обновление пользователей
-                        users.Remove(userToRemove);
-                        userToRemove.tokenSource.Cancel();
-
-                        string names = "/log\n" + string.Join("\n", viewModel.UserList);
-                        foreach (User user in users)
-                        {
-                            SendMessage(user.socket, names);
-                        }
                     }
                     else
                     {
@@ -125,11 +128,16 @@ namespace Serveeer.Model
         }
         public async Task SendMessage(Socket client, string text)
         {
-            if (text != "/disconnect")
+            if (text == "/disconnect")
             {
-                byte[] bytes = Encoding.Unicode.GetBytes(text);
-                await client.SendAsync(bytes, SocketFlags.None);
+                foreach (User user in users)
+                {
+                    user.tokenSource.Cancel();
+                    
+                }
             }
+            byte[] bytes = Encoding.Unicode.GetBytes(text);
+            await client.SendAsync(bytes, SocketFlags.None);        
         }
     }
 }

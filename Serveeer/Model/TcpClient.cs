@@ -54,11 +54,10 @@ namespace Serveeer.Model
         }
         public async Task SendMessage(string text)
         {
-            if (text != "/disconnect")
-            {
-                byte[] bytes = Encoding.Unicode.GetBytes(text);
-                await server.SendAsync(bytes, SocketFlags.None);
-            }         
+
+            byte[] bytes = Encoding.Unicode.GetBytes(text);
+            await server.SendAsync(bytes, SocketFlags.None);
+                   
         }
     }
 }

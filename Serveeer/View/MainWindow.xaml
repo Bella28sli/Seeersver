@@ -22,7 +22,7 @@
                 <TextBox
 x:Name="NameTextBox"
 materialDesign:HintAssist.HelperText=""
-materialDesign:HintAssist.Hint="Введите ник" Background="#FF010219" BorderBrush="#FFB30ED2" FontSize="25" Text="{Binding NameTextProperty}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFF7A3EC" Cursor="Hand" FontFamily="Century Gothic"/>
+materialDesign:HintAssist.Hint="Введите ник" Background="#FF010219" BorderBrush="#FFB30ED2" FontSize="25" Text="{Binding NameTextProperty}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFF7A3EC" Cursor="Hand" FontFamily="Century Gothic" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch"/>
             </Grid>
             <Grid Grid.Column="1" Cursor="Hand">
                 <Button

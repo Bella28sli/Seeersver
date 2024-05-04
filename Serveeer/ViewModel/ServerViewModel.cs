@@ -4,6 +4,7 @@ using Serveeer.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Net.Sockets;
@@ -26,6 +27,7 @@ namespace Serveeer.ViewModel
         TcpClient tcpClient;
         MainViewModel mainViewModel;
         ChatWindow1xaml chatWindow;
+        static bool needToClose = true;
         public ServerViewModel(ChatWindow1xaml ChatWin, MainViewModel mainView)
         {
             mainViewModel = mainView;
@@ -45,25 +47,47 @@ namespace Serveeer.ViewModel
         {
             if (MessageTextProperty == "/disconnect")
             {
-
-                tcpClient.SendMessage("/disconnect");
+                needToClose = false;
+                tcpServer.SendMessage(tcpServer.socket, MessageTextProperty);
                 MainWindow newMain = new MainWindow();
                 newMain.Show();
                 Window.Close();
                 return;
             }
-            tcpClient.SendMessage(MessageTextProperty);
+            mainViewModel.tcpClient.SendMessage(MessageTextProperty);
         }
         private async Task ExitText()
         {
             MessageTextProperty = "/disconnect";
             SendText();
         }
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            if(needToClose)
+            {
+                ExitText();
+            }
+        }
         private void CheckLogs()
         {
-            ObservableCollection<string> backUp = new ObservableCollection<string>();
-            backUp = UserList;
+            if (UserList[0] == tcpServer.backUp[0])
+            {
+                UserList.Clear();
+                foreach (var item in tcpServer.users)
+                {
+                    UserList.Add(item.name);
+                }
+            }
+            else
+            {
+                UserList.Clear();
+                foreach (var item in tcpServer.backUp)
+                {
+                    UserList.Add(item);
+                }
+            }
         }
+
 
         private string messageTextProperty;
         public string MessageTextProperty
