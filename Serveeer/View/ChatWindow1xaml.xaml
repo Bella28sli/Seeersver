@@ -1,0 +1,73 @@
+﻿<Window x:Class="Serveeer.View.ChatWindow1xaml"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Serveeer.View"
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:helpers="clr-namespace:Serveeer.ViewModel.Helpers" xmlns:viewmodel="clr-namespace:Serveeer.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
+        mc:Ignorable="d"
+        Title="ChatWindow1xaml" Height="450" Width="800" Background="#FF010219" >
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="7*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Button Content="ЛОГИ" Command="{Binding CheckLogsCommand}"/>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Button Content="Выйти" Command="{Binding SendCommand}" FontFamily="Century Gothic" FontSize="20" Cursor="Hand"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="9*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <TextBlock Text="Пользователи:"  FontSize="18" materialDesign:HintAssist.HelperText="" Background="#FF010219" Foreground="#FFF7DDF4" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" FontFamily="Century Gothic" />
+                </Grid>
+                <Grid Grid.Row="1">
+                    <ListBox ItemsSource="{Binding UserList}" Foreground="#E5F3C7F7" FontFamily="Century Gothic" FontSize="18" HorizontalContentAlignment="Center"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1">
+                <ListBox ItemsSource="{Binding MessageList}" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <TextBox
+x:Name="NameTextBox"
+materialDesign:HintAssist.HelperText=""
+materialDesign:HintAssist.Hint="Введите сообщение" Background="#3FFFFFFF" BorderBrush="#FF0E3FD2" FontSize="20" Text="{Binding MessageTextProperty}" Foreground="#FFF2C6F6" Padding="24,4,0,4"/>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Button Content="Отправить" Command="{Binding SendCommand}" FontFamily="Century Gothic" FontSize="20" />
+            </Grid>
+            
+            
+        </Grid>
+        
+    </Grid>
+</Window>

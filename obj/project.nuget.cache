@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "0ScbBx2mfftyo0PcsHDzSzzGcFg1jcNq2bPVdqrKB0tzegjx7sAwapPvexRIYJSjUBt9V7NSQ31opxj+Y17g3A==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\alepi\\Downloads\\Serveeer\\Serveeer\\Serveeer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\alepi\\.nuget\\packages\\materialdesigncolors\\3.0.0\\materialdesigncolors.3.0.0.nupkg.sha512",
+    "C:\\Users\\alepi\\.nuget\\packages\\materialdesignthemes\\5.0.0\\materialdesignthemes.5.0.0.nupkg.sha512",
+    "C:\\Users\\alepi\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.39\\microsoft.xaml.behaviors.wpf.1.1.39.nupkg.sha512"
+  ],
+  "logs": []
+}

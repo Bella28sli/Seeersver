@@ -1,0 +1,40 @@
+﻿<Window x:Class="Serveeer.View.ChatWindow1xaml"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Serveeer.View"
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:helpers="clr-namespace:Serveeer.ViewModel.Helpers" xmlns:viewmodel="clr-namespace:Serveeer.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
+        mc:Ignorable="d"
+        Title="ChatWindow1xaml" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="7*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button Content="Посмотреть логин чата" Grid.Row="0" Grid.Column="1"/>
+        <ListBox ItemsSource="{Binding MessageList}" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock Text="Пользователи:" Grid.Column="0" Grid.Row="0" FontSize="20" materialDesign:HintAssist.HelperText="" Background="White" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <ListBox Grid.Row="1" Grid.Column="0"/>
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Выйти" Grid.Column="0" Command="{Binding SendCommand}"/>
+            <Button Content="Отправить" Grid.Column="2" Command="{Binding SendCommand}"/>
+            <TextBox Grid.Column="1"
+x:Name="NameTextBox"
+materialDesign:HintAssist.HelperText=""
+materialDesign:HintAssist.Hint="Введите сообщение" Background="White" BorderBrush="#FF0E3FD2" FontSize="20" Text="{Binding MessageTextProperty}"/>
+            
+        </Grid>
+        
+    </Grid>
+</Window>
