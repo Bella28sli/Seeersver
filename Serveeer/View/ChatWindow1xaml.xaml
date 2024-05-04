@@ -47,7 +47,7 @@
                 </Grid>
             </Grid>
             <Grid Grid.Column="1">
-                <ListBox ItemsSource="{Binding MessageList}" />
+                <ListBox ItemsSource="{Binding MessageList}" Foreground="#E5F7BAF7" FontFamily="Century Gothic" FontSize="20" Padding="15,0,0,0" />
             </Grid>
         </Grid>
         <Grid Grid.Row="2" >

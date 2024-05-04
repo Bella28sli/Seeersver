@@ -64,23 +64,27 @@ namespace Serveeer.Model
                     mainView.UserList.Add($"[{newUser.name}]");
                     isNewUser = false;
                 }
-
-                string messageText = receivedMessage;
-                string messageSender = users.FirstOrDefault(u => u.socket == client)?.name;
-                string messageSendDate = DateTime.Now.ToString();
-                string fulltext = $"[ {messageSendDate} ] {messageSender}: {messageText}";
-
-
-                foreach (User user in users)
+                else
                 {
-                    if (user.socket != client)
+
+                    string messageText = receivedMessage;
+                    string messageSender = users.FirstOrDefault(u => u.socket == client)?.name;
+                    string messageSendDate = DateTime.Now.ToString();
+                    string fulltext = $"[ {messageSendDate} ] {messageSender}: {messageText}";
+
+
+                    foreach (User user in users)
                     {
-                        viewModel.MessageList.Add(fulltext);
-                        SendMessage(user.socket, fulltext);
+                        if (user.socket != client)
+                        {
+                            SendMessage(user.socket, fulltext);
+                        }
                     }
+                    viewModel.MessageList.Add(fulltext);
+                    SendMessage(client, fulltext);
+                    fulltext = "";
+
                 }
-                SendMessage(client, fulltext);
-                fulltext = "";
                 receivedMessage = ""; // Сбрасываем сообщение после обработки
             }
         }
