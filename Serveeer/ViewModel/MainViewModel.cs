@@ -25,6 +25,7 @@ namespace Serveeer.ViewModel
 
         public MainWindow StartWindow { get; set; }
         ChatWindow1xaml currentWin;
+        static bool needToClose = true;
 
         public Window Window { get; set; }
         public TcpClient tcpClient;
@@ -91,6 +92,7 @@ namespace Serveeer.ViewModel
         {
             if(MessageTextProperty == "/disconnect")
             {
+                needToClose = false;
                 tcpClient.SendMessage("/disconnect");
                 MainWindow newMain = new MainWindow();
                 newMain.Show();
@@ -107,7 +109,10 @@ namespace Serveeer.ViewModel
         }
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            ExitText();
+            if (needToClose)
+            {
+                ExitText();
+            }
         }
 
         private ObservableCollection<string> messageList = new ObservableCollection<string>();
